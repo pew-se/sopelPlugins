@@ -110,15 +110,16 @@ def coronavirus(bot, trigger):
         except:
             continue
         if columns[1] == country:
+            break
 
 
     if str(country) in cases:
-        bot.say(f'😷 \x0308{cases[str(country)].confirmed}\x03'
-                f'(\x0308{cases[str(country)].new_cases}\x03) '
-                f'😵 \x0313{cases[str(country)].critical}\x03 '
-                f'⚰️ \x0304{cases[str(country)].deaths}\x03'
-                f'(\x0304{cases[str(country)].new_deaths}\x03) '
-                f'☠️ \x0305{round(cases[str(country)].deaths / cases[str(country)].confirmed * 100, 2)}%\x03 ')
+        bot.say(f'😷 {cases[str(country)].confirmed}'
+                f'({cases[str(country)].new_cases}) '
+                f'😵 {cases[str(country)].critical} '
+                f'⚰️ {cases[str(country)].deaths}'
+                f'({cases[str(country)].new_deaths}) '
+                f'☠️ {round(cases[str(country)].deaths / cases[str(country)].confirmed * 100, 2)}%\x03 ')
     else:
         bot.say(f'Country not in the list')
 
