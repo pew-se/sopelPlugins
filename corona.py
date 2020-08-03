@@ -89,29 +89,19 @@ def coronavirus(bot, trigger):
     rows = table.find_all('tr')
 
     tag_re = re.compile(r'(<!--.*?-->|<[^>]*>)')
-    total = Corona
     for row in rows:
         try:
             columns = row.find_all('td')
             columns = [tag_re.sub('', str(x)).strip() for x in columns]
-            columns[0] = columns[1].lower()
-            if columns[1].lower() == 'total:':
-                total.deaths = int(columns[4].replace(',', '') or 0)
-                total.confirmed = int(columns[2].replace(',', '') or 0)
-                total.new_deaths = str(columns[5])
-                total.new_cases = str(columns[3])
-                total.critical = int(columns[9].replace(',', '') or 0)
-                continue
-            cases[columns[0].lower()].deaths = int(columns[4].replace(',', '') or 0)
-            cases[columns[0].lower()].confirmed = int(columns[2].replace(',', '') or 0)
-            cases[columns[0].lower()].new_deaths = str(columns[5])
-            cases[columns[0].lower()].new_cases = str(columns[3])
-            cases[columns[0].lower()].critical = int(columns[9].replace(',', '') or 0)
+            if columns[1].lower() == country:
+                cases[columns[1].lower()].deaths = int(columns[4].replace(',', '') or 0)
+                cases[columns[1].lower()].confirmed = int(columns[2].replace(',', '') or 0)
+                cases[columns[1].lower()].new_deaths = str(columns[5])
+                cases[columns[1].lower()].new_cases = str(columns[3])
+                cases[columns[1].lower()].critical = int(columns[9].replace(',', '') or 0)
+                break
         except:
             continue
-        if columns[1] == country:
-            break
-
 
     if str(country) in cases:
         bot.say(f'😷 {cases[str(country)].confirmed}'
@@ -119,7 +109,7 @@ def coronavirus(bot, trigger):
                 f'😵 {cases[str(country)].critical} '
                 f'⚰️ {cases[str(country)].deaths}'
                 f'({cases[str(country)].new_deaths}) '
-                f'☠️ {round(cases[str(country)].deaths / cases[str(country)].confirmed * 100, 2)}%\x03 ')
+                f'☠️ {round(cases[str(country)].deaths / cases[str(country)].confirmed * 100, 2)}% ')
     else:
         bot.say(f'Country not in the list')
 
