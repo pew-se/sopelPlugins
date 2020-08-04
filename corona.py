@@ -11,9 +11,9 @@ import requests
 
 class Corona:
     __deaths = 0
-    __recovered = 0
     __confirmed = 0
     __critical = 0
+    __population = 0
     __new_deaths = ''
     __new_cases = ''
 
@@ -65,6 +65,14 @@ class Corona:
     def critical(self, value):
         self.__critical += value
 
+    @property
+    def population(self):
+        return self.__population
+
+    @population.setter
+    def population(self, value):
+        self.__population += value
+
 
 @module.commands('corona', 'cor')
 def coronavirus(bot, trigger):
@@ -94,22 +102,25 @@ def coronavirus(bot, trigger):
             columns = row.find_all('td')
             columns = [tag_re.sub('', str(x)).strip() for x in columns]
             if columns[1].lower() == country:
-                cases[columns[1].lower()].deaths = int(columns[4].replace(',', '') or 0)
-                cases[columns[1].lower()].confirmed = int(columns[2].replace(',', '') or 0)
-                cases[columns[1].lower()].new_deaths = str(columns[5])
-                cases[columns[1].lower()].new_cases = str(columns[3])
-                cases[columns[1].lower()].critical = int(columns[9].replace(',', '') or 0)
+                cases[country].deaths = int(columns[4].replace(',', '') or 0)
+                cases[country].new_deaths = str(columns[5])
+                cases[country].confirmed = int(columns[2].replace(',', '') or 0)
+                cases[country].new_cases = str(columns[3])
+                cases[country].critical = int(columns[9].replace(',', '') or 0)
+                cases[country].population = int(columns[14].replace(',', '') or 0)
                 break
         except:
             continue
 
     if str(country) in cases:
-        bot.say(f'😷 {cases[str(country)].confirmed}'
+        bot.say(f'{country.capitalize()}: '
+                f'😷 {cases[str(country)].confirmed}'
                 f'({cases[str(country)].new_cases}) '
-                f'😵 {cases[str(country)].critical} '
+                f'😵 {cases[str(country)].critical}  '
                 f'⚰️ {cases[str(country)].deaths}'
                 f'({cases[str(country)].new_deaths}) '
-                f'☠️ {round(cases[str(country)].deaths / cases[str(country)].confirmed * 100, 2)}% ')
+                f'☠️ {round(cases[str(country)].deaths / cases[str(country)].confirmed * 100, 2)}% of cases, '
+                f'{round(cases[str(country)].deaths / cases[str(country)].population * 100, 2)}% of population')
     else:
-        bot.say(f'Country not in the list')
+        bot.say(f'{country.capitalize()} is not in the list')
 
