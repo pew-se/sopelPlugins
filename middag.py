@@ -26,6 +26,4 @@ def dinner(bot, trigger):
     link_re = re.compile(r'(<a href="|" .*)')
     mealLink = link_re.sub('', str(raw)).strip()
 
-    bot.say(f'Du kan väl för fan laga lite '
-        f'{mealName}: '
-        f'{mealLink}')
+    bot.say(f'Du kan väl för fan laga lite {mealName}: {mealLink}')
